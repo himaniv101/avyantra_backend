@@ -267,6 +267,166 @@ ReferralHospital :(referralHospital,req,result)=>{
      referralHospital.deleted_flag=0
      referralHospital.active_flag=1
      return referralHospital
-}
-
+},
+updateBabyRespMapper:(result,req)=>{
+     var baby_respiratory_support = JSON.parse(req.body.baby_respiratory_support); 
+     result.groaning =  req.body.groaning,
+     result.grunting = req.body.grunting,
+     result.stridor = req.body.stridor,
+     result.retraction = req.body.retraction,
+     result.fast_breathing = req.body.fast_breathing,
+     result.oxygen_saturation = req.body.oxygen_saturation,
+     result.breathing_rate = req.body.breathing_rate,
+     result.baby_chest_indrawing = req.body.baby_chest_indrawing,
+     result.x_ray_result = req.body.x_ray_result,
+     result.x_ray_status_done = req.body.x_ray_status_done,
+     result.x_ray_status = req.body.x_ray_status,
+     result.x_ray_diagnosis_any_other = req.body.x_ray_diagnosis_any_other,
+     result.apnea_diagnosis = req.body.apnea_diagnosis,
+     result.apnea_status = req.body.apnea_status,
+     result.baby_respiratory_support =baby_respiratory_support,
+     result.baby_respiratory_support_if_yes = req.body.baby_respiratory_support_if_yes,
+     result.tab_name = req.body.tab_name
+     return result
+},
+updateBabyCVMapper:(result,req)=>{
+     result.heart_rate= req.body.heart_rate ,
+     result.urine_output=req.body.urine_output,
+     result.baby_blood_pressure_mean_arterial_bp= req.body.baby_blood_pressure_mean_arterial_bp,
+     result.baby_blood_pressure_upper_limb=req.body.baby_blood_pressure_upper_limb ,
+     result.baby_blood_pressure_lower_limb=req.body.baby_blood_pressure_lower_limb ,
+     result.capillary_refill_unit=req.body.capillary_refill_unit ,
+     result.low_peripheral_pulse_volume=req.body.low_peripheral_pulse_volume ,
+     result.cool_peripheries=req.body.cool_peripheries,
+     result.two_d_echo_done=req.body.two_d_echo_done ,
+     result.two_d_echo_done_if_yes= req.body.two_d_echo_done_if_yes,
+     result.baby_on_ionotropes= req.body.baby_on_ionotropes ,
+     result.central_line= req.body.central_line,
+     result.skin_pustules= req.body.skin_pustules,
+     result.infusion_of_blood_products=req.body.infusion_of_blood_products
+     return result
+},
+updateBabyCNSMapper:(result,req)=>{
+     result.features_of_encephalopathy= req.body.features_of_encephalopathy,
+     result.seizures= req.body.seizures,
+     result.abnormal_movements_like_tonic_posturing= req.body.abnormal_movements_like_tonic_posturing,
+     result.af_bulge= req.body.af_bulge,
+     result.tab_name= req.body.tab_name  
+     return result
+},
+updateBabyGITMapper:(result,req)=>{
+   result .abdominal_dystension= req.body.abdominal_dystension,
+   result. frequency_of_stools= req.body.frequency_of_stools,
+   result.diarrhea= req.body.diarrhea,
+   result.vomiting= req.body.vomiting,
+   result.feeding_intolerance= req.body.feeding_intolerance,
+   result.baby_movement=req.body.baby_movement,
+   result.tab_name= req.body.tab_name 
+     return result
+},
+updateBabyInvestigationMapper:(result,req)=>{
+     result.baby_thyroid_status= req.body.baby_thyroid_status,
+     result.baby_thyroid_result= req.body.baby_thyroid_result,
+     result.baby_blood_glucose= req.body.baby_blood_glucose,
+     result.baby_haemoglobin_levels= req.body.baby_haemoglobin_levels,
+     result.baby_c_reactive_protien_levels= req.body.baby_c_reactive_protien_levels,
+     result.micro_esr=req.body.micro_esr,
+     result.baby_procalcitonin_levels=req.body.baby_procalcitonin_levels,
+     result.total_leucocute_count_unit=req.body.total_leucocute_count_unit,
+     result.total_leucocute_count=req.body.total_leucocute_count,
+     result.absolute_neutrophil_count=req.body.absolute_neutrophil_count,
+     result.absolute_neutrophil_count_unit=req.body.absolute_neutrophil_count_unit,
+     result.immature_to_mature_neutrophil_ratios=req.body.immature_to_mature_neutrophil_ratios,
+     result.thrombocytopenia_unit=req.body.thrombocytopenia_unit,
+     result.thrombocytopenia=req.body.thrombocytopenia,
+     result.urine_rest_for_pus_cells=req.body.urine_rest_for_pus_cells,
+     result.urine_culture_test=req.body.urine_culture_test,
+     result.blood_culture_report=req.body.blood_culture_report,
+     result.gram_positive_bacteria=req.body.gram_positive_bacteria,
+     result.gram_positive_bacteria_if_other=req.body.gram_positive_bacteria_if_other,
+     result.gram_negative_bacteria=req.body.gram_negative_bacteria,
+     result.gram_negative_bacteria_if_other=req.body.gram_negative_bacteria_if_other,
+     result.fungi=req.body.fungi,
+     result.other_organism=req.body.other_organism,
+     result.antibiotic_status_resisitant=req.body.antibiotic_status_resisitant,
+     result.antibiotic_status_intermediate=req.body.antibiotic_status_intermediate,
+     result.antibiotic_status_value=req.body.antibiotic_status_value,
+     result.sodium=req.body.sodium,
+     result.potassium=req.body.potassium,
+     result.chlorine=req.body.chlorine,
+     result.calcium= req.body.calcium,
+     result.phosphate= req.body.phosphate,
+     result.magnesium=req.body.magnesium,
+     result.urea=req.body.urea,
+     result.creatinine=req.body.creatinine,
+     result.lactate_levels=req.body.lactate_levels,
+     result.bilirubin_levels=req.body.bilirubin_levels,
+     result.cord_ph=req.body.cord_ph,
+     result.arrhythmia=req.body.arrhythmia,
+     result.csf_culture=req.body.csf_culture,
+     result.csf_culture_tsb_value=req.body.csf_culture_tsb_value,
+     result.tab_name=req.body.tab_name
+     return result
+  },
+  updateBabyAntibioticMapper:(result,req)=>{
+     result.antibiotic_given= req.body.antibiotic_given,
+     result.date_of_administration_of_antiobiotic= req.body.date_of_administration_of_antiobiotic,
+     result.time_of_administration_of_antiobiotic_hours=req.body.time_of_administration_of_antiobiotic_hours,
+     result.time_of_administration_of_antiobiotic_minute=req.body.time_of_administration_of_antiobiotic_minute,
+     result.antibiotic_name= req.body.antibiotic_name,
+     result.antibiotic_name_if_other= req.body.antibiotic_name_if_other,
+     result.date_of_blood_samples_sent_for_culture_test= req.body.date_of_blood_samples_sent_for_culture_test,
+     result.time_of_blood_samples_sent_for_culture_test_hours= req.body.time_of_blood_samples_sent_for_culture_test_hours,
+     result.time_of_blood_samples_sent_for_culture_test_minute= req.body.time_of_blood_samples_sent_for_culture_test_minute,
+     result.blood_sample_taken_prior_to_antiobiotic_administration= req.body.blood_sample_taken_prior_to_antiobiotic_administration
+     return result
+  },
+  updateBabyFinalMapper:(result,req)=>{
+      result.days_of_stay_in_hospital= req.body.days_of_stay_in_hospital,
+      result.final_diagnosis_sepsis=req.body.final_diagnosis_sepsis,
+      result.final_diagnosis_rds= req.body.final_diagnosis_rds,
+      result.final_diagnosis_ttnb=req.body.final_diagnosis_ttnb,
+      result.final_diagnosis_jaundice=req.body.final_diagnosis_jaundice,
+      result.final_diagnosis_lbw=req.body.final_diagnosis_lbw,
+      result.final_diagnosis_lga=req.body.final_diagnosis_lga,
+      result.final_diagnosis_aga=req.body.final_diagnosis_aga,
+      result.final_diagnosis_anemia= req.body.final_diagnosis_anemia,
+      result.final_diagnosis_dextochordia=req.body.final_diagnosis_dextochordia,
+      result.final_diagnosis_hypoglycemia=req.body.final_diagnosis_hypoglycemia,
+      result.final_diagnosis_hypocalcemia=req.body.final_diagnosis_hypocalcemia,
+      result.final_diagnosis_gastroenteritis=req.body.final_diagnosis_gastroenteritis,
+      result.final_diagnosis_perinatal_respiratory_depression=req.body.final_diagnosis_perinatal_respiratory_depression,
+      result.final_diagnosis_shock=req.body.final_diagnosis_shock,
+      result.final_diagnosis_feeding_intolerence=req.body.final_diagnosis_feeding_intolerence,
+      result.baby_discharge_date=req.body.baby_discharge_date,
+      result.final_diagnosis_sga=req.body.final_diagnosis_sga,
+      result.final_diagnosis_eos_los=req.body.final_diagnosis_eos_los,
+      result.final_diagnosis_other=req.body.final_diagnosis_other
+      return result
+  },
+  updateBabyMedicalRecordMapper:(result,req)=>{
+     result.hospital_id=req.params.hospitalId
+     result.hospital_branch_id=req.params.hospitalBranchId
+     result.hospital_name=req.body.hospital_name
+     result.hospital_branch_name=req.body.hospital_branch_name
+     result.baby_medical_record_number=req.body.bmrn
+     result.baby_mother_medical_record_number=req.body.mmrn
+     return result
+ },
+ patientResultMapper:(result,req)=>{
+     result.baby_name = req.body.babyName
+     result.mother_name = req.body.motherName
+     result.father_name = req.body.fatherName
+     result.state = req.body.state
+     result.address = req.body.address
+     result.city = req.body.city
+     result.nationality = req.body.nationality
+     result.email_id = req.body.email
+     result.primary_contact_no = req.body.contactNumberPrimary
+     result.secondary_contact_no = req.body.contactNumberSecondary
+     result.pincode = req.body.pincode
+     result.updated_by = enumConst.userType.hospital_branch
+     result.active_flag = req.body.status
+     return result
+ },
 }
