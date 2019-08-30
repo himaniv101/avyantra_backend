@@ -487,5 +487,21 @@ updateBabyInvestigationMapper:(result,req)=>{
      hospitalBranchSpeciality.deleted_flag=0
      hospitalBranchSpeciality.active_flag=1
      return hospitalBranchSpeciality
+ },
+ staffModelMapper:(result,req)=>{
+     result.first_name=req.body.firstName
+     result.last_name=req.body.lastName
+     result.hospital_branch_speciality_id=req.body.speciality
+     result.hospital_branch_role_id=req.body.assignRole
+     result.active_flag= req.body.status
+     result.reporting_user_id=req.body.reportTo
+     return result
+ },
+ userModelMapper:(userResult ,req)=>{
+     userResult.contact_number=req.body.contactNumber
+     userResult.email_address=req.body.email
+     userResult.user_name=req.body.username
+     userResult.password=req.body.password
+     return userResult
  }
 }

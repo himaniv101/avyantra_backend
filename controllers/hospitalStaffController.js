@@ -11,17 +11,11 @@ const excel = require('exceljs');
 const nodeMailer = require('nodemailer');
 
 exports.getHospitalStaffRoles =(req,res,next)=>{
-    sequelize.query('SELECT m_hospital_branch_roles.id AS hospital_branch_roles_id ,m_roles.role_id ,m_roles.role ,m_hospital_branch_roles.hospital_id, m_hospital_branch_roles.hospital_branch_id  FROM  m_roles JOIN m_hospital_branch_roles ON m_roles.role_id = m_hospital_branch_roles.role_id WHERE hospital_id =:hospital_id',
+    sequelize.query(queries.getHospitalStaffRoles(),
     { replacements: { 
         hospital_id:req.params.hospitalId
     }, type: sequelize.QueryTypes.SELECT }
     ).then(result => {
-
-console.log("result :" , result)
-
-      res.json({
-          result:result
-      })
         res.json( responseHelper.success(constant.success,result))
     })
     .catch(err => {
@@ -30,7 +24,7 @@ console.log("result :" , result)
 }
 
 exports.getHospitalStaffSpecialities =(req,res,next)=>{
-    sequelize.query('SELECT m_hospital_branch_specialities.id AS  hospital_branch_speciality_id ,m_specialities.speciality_id , m_specialities.speciality , m_hospital_branch_specialities.hospital_id,m_hospital_branch_specialities.hospital_branch_id FROM m_specialities  JOIN m_hospital_branch_specialities ON m_specialities.speciality_id = m_hospital_branch_specialities.speciality_id WHERE  hospital_id =:hospital_id',
+    sequelize.query(queries.getHospitalStaffSpecialities(),
     { replacements: { 
         hospital_id:req.params.hospitalId
     }, type: sequelize.QueryTypes.SELECT }
@@ -43,7 +37,6 @@ exports.getHospitalStaffSpecialities =(req,res,next)=>{
 }
 
 exports.getHospitalBranchesByHospitalId =(req,res,next)=>{
-   
     pReadingModels.hospital_branch_model.findAll({
         where:{
             hospital_id:req.params.hospitalId
@@ -59,100 +52,67 @@ exports.getHospitalBranchesByHospitalId =(req,res,next)=>{
 }
 
 exports.addStaff=(req,res,next)=>{
-
     var staffUser ={}
     var staff={}
     var staffHospitalMapper={}
     var staffPermission={}
-
     staffUser = mapper.staffUserMapper(staffUser,req)
-
     pReadingModels.user_model.create(staffUser)
-    .then(result=>{
-           
+    .then(result=>{  
         if(result!=null){
-
       pReadingModels.permission_model.findAll()
       .then(pResult=>{
-
       if(pResult.length > 0){
-
         pResult.forEach((data,index)=>{
-
             staffPermission.user_id=result.user_id
             staffPermission.permission_id= data.permision_Id
             staffPermission.active_flag=0
-
             pReadingModels.staff_permission_model.create(staffPermission)
-        })
-      }
-
-      })
-
+           })
+        }
+     })
             staff=mapper.staff(staff,result,req)
-
             pReadingModels.staff_model.create(staff)
             .then(staffResult=>{
-
                 if(staffResult!=null){
-
                  staffHospitalMapper = mapper.staffHospitalMapper(staffHospitalMapper,staffResult,req)
-                   
                  for(var i =0 ; i<req.body.branch.length;i++){
-     
                     staffHospitalMapper.hospital_branch_id=req.body.branch[i]
                     pReadingModels.hospital_staff_model.create(staffHospitalMapper)
-                    .then( )
                     }
                  res.json( responseHelper.success(constant.staff_add_successfull,staffResult))
-                }
-            })
-        }
+                }  })
+         }
     }).catch(err => {
         res.json(responseHelper.serveError(constant.error_msg,err))
     })
 }
 
 exports.getStaffs = async (req,res,next)=>{
-
        var start = (req.params.start-1)*req.params.end
-
-       var result = await  sequelize.query('SELECT * FROM vw_get_staffs '+
-        ' WHERE hospital_id=:hospital_id AND hospital_branch_id=:hospital_branch_id AND deleted_flag=0 '+
-        ' LIMIT ' + req.params.end +' OFFSET ' +start,
+       var result = await  sequelize.query(queries.getStaffs(req,start),
         { replacements: { 
             hospital_id:req.params.hospitalId,
             hospital_branch_id:req.params.hospitalBranchId
         }, type: sequelize.QueryTypes.SELECT }
         )
-   
        if(result != null){
-
         var staffPermisionId =[]
-
         for(var i =0 ; i<result.length ; i++){
-        
-            var permissionResult = await sequelize.query(' SELECT user_id , permission_id  ,map_user_permissions.active_flag, permission '+
-            ' FROM map_user_permissions '+
-            ' JOIN m_permissions ON m_permissions.permision_Id=map_user_permissions.permission_id '+
-            ' WHERE user_id=:user_id ',
+            var permissionResult = await sequelize.query(queries.getStaffsPermission(),
             { replacements: { 
                 user_id:result[i].user_id,
                 deleted_flag:0
             }, type: sequelize.QueryTypes.SELECT }
             )
-
                 if(permissionResult.length == 0){
                     result[i].dataEntry_review_permission=0
                     result[i].scoreGenerate=0
                 }else{
                     for(var j = 0 ; j<permissionResult.length ;j++){
-                    console.log("j :" , j)
                     result[i] = util.getStaffPermission(permissionResult[j].permission_id, result[i],permissionResult[j])
                     staffPermisionId[j]=permissionResult[j].permission_id
-                    console.log("staff result :",result)
                 }
-
                 result[i].permission_id =staffPermisionId
             }    
          }
@@ -164,7 +124,6 @@ exports.getStaffs = async (req,res,next)=>{
 }
 
 exports.getStaffCount=(req,res,next)=>{
-
     pReadingModels.hospital_staff_model
     .findAndCountAll({
        where: {
@@ -176,20 +135,10 @@ exports.getStaffCount=(req,res,next)=>{
     .then(result => {
       res.json( responseHelper.success(constant.success,{staff_count:result.count}))
     });
-
 }
 
 exports.getStaff=(req,res,next)=>{
-    sequelize.query('SELECT  m_users.user_name, m_users.contact_number, m_users.email_address,m_staffs.staff_id,m_staffs.first_name,m_staffs.last_name,m_hospital_branch_specialities.speciality_id, '+
-    'm_specialities.speciality,m_hospital_branch_roles.role_id,m_roles.role,map_staff_hospitals.hospital_id,map_staff_hospitals.hospital_branch_id,map_staff_hospitals.staff_hospital_id, '+
-    'm_staffs.staff_id FROM m_users '+ 
-    'JOIN m_staffs ON  m_users.user_id= m_staffs.user_id '+
-    'JOIN map_staff_hospitals ON map_staff_hospitals.staff_id = map_staff_hospitals.staff_id '+
-    'JOIN m_hospital_branch_specialities ON m_hospital_branch_specialities.id=m_staffs.hospital_branch_speciality_id '+
-    'JOIN m_specialities ON m_hospital_branch_specialities.speciality_id=m_specialities.speciality_id '+
-    'JOIN m_hospital_branch_roles ON m_hospital_branch_roles.id=m_staffs.hospital_branch_role_id '+
-    'JOIN m_roles ON m_roles.role_id = m_hospital_branch_roles.role_id '+
-    'WHERE m_staffs.staff_id=:staff_id AND map_staff_hospitals.hospital_id =:hospital_id AND map_staff_hospitals.hospital_branch_id=:hospital_branch_id  LIMIT 1',
+    sequelize.query(queries.getStaffDetails(),
     { replacements: { 
         staff_id:req.params.staffId,
         hospital_id:req.params.hospitalId,
@@ -204,101 +153,62 @@ exports.getStaff=(req,res,next)=>{
 }
 
 exports.updateStaff=(req,res,next)=>{
-    
      var staffHospitalMapper={}
      var hospitalStaffResult
      var hospitalStaff=[]
-
     pReadingModels.staff_model.findByPk(req.params.staffId)
     .then(result=>{
-        result.first_name=req.body.firstName
-        result.last_name=req.body.lastName
-        result.hospital_branch_speciality_id=req.body.speciality
-        result.hospital_branch_role_id=req.body.assignRole
-        result.active_flag= req.body.status
-        result.reporting_user_id=req.body.reportTo
-        result.save()
-     
+     result = mapper.staffModelMapper(result,req)
+     result.save()
         if(result!=null){
         pReadingModels.user_model.findByPk(result.user_id)
               .then(userResult=>{
-                userResult.contact_number=req.body.contactNumber
-                userResult.email_address=req.body.email
-                userResult.user_name=req.body.username
-                userResult.password=req.body.password
+                userResult = mapper.userModelMapper(userResult,req)
                 userResult.save()
             })
-
             staffHospitalMapper = mapper.staffHospitalMapper(staffHospitalMapper,result,req)
-                   
             for(var i =0 ; i<req.body.branch.length;i++){
-    
                staffHospitalMapper.hospital_branch_id=req.body.branch[i]
-    
                pReadingModels.hospital_staff_model.create(staffHospitalMapper)
                .then(hospitalStaffModelResult=>{
                })
             }
-
             pReadingModels.hospital_staff_model.findAll({
                 where:{
                     hospital_id:req.params.hospitalId,
                     staff_id:req.params.staffId
                 }
             }).then(hospitalStaffModelResult=>{
-    
                 for(var i =0 ; i<hospitalStaffModelResult.length;i++){
                     hospitalStaffModelResult[i].deleted_flag=1
                     hospitalStaffModelResult[i].active_flag=0
                     hospitalStaffModelResult[i].save()
                 }
                 res.json( responseHelper.success(constant.staff_updated_successfully,hospitalStaffModelResult))
-            })
-        }
-   })
-
-}
+            }) }
+       })
+   }
 
 exports.updateStaffPermission= async (req,res)=>{
-
   var reqData = req.body
-
   for(var i =0 ; i<reqData.length ; i++ ){
-
     var staffDetail = reqData[i]
-
     var permissionId =[]
-    
     var pResult = await  pReadingModels.permission_model.findAll()
-
         pResult.forEach((data,index)=>{
             permissionId.push(data.permision_Id)
 
         })
-
      for( var j =0 ; j<permissionId.length ; j++){
-
        var perId = permissionId[j]
-
        var staffPermission = await pReadingModels.staff_permission_model.findAll({
             where:{
                user_id:reqData[i].user_id,
                permission_id:perId
             }
          })
-
-           console.log('staffPermission :' , staffPermission)
-
            if(staffPermission.length > 0){
-
              var result = await  pReadingModels.staff_permission_model.findByPk(staffPermission[0].user_permission_id)
-               
-                  console.log('user_permission_id :' , staffPermission[0].user_permission_id )
-
-                  console.log('permission_id :' ,staffPermission[0].permission_id )
-
-                  console.log('inside of if condition :' , result)
-
                    if(staffPermission[0].permission_id == 1 && staffDetail.scoreGenerate == 0  && staffDetail.dataEntry_review_permission==1)
                    {
                    result.active_flag = 1
@@ -321,12 +231,10 @@ exports.updateStaffPermission= async (req,res)=>{
                    result.save()
            }else{
             res.json( responseHelper.notFound(constant.no_record_found))
-      }      
-    }
- }  
-
+         }      
+      }
+    }  
  res.json( responseHelper.success(constant.staff_updated_successfully))
-
 }
 
 exports.sendMail = (req,res,next) =>{
@@ -334,7 +242,6 @@ var user ={}
 var referral ={}
 var referralHospital ={}
 user = mapper.User(user,req)
-
 pReadingModels.user_model.create(user)
 .then(result=>{
     if(result != null){
@@ -351,9 +258,7 @@ pReadingModels.user_model.create(user)
     }
 })
 .then(result=>{
-
 if(result != null){
-
     let transporter = nodeMailer.createTransport({
         host: 'smtp.gmail.com',
         port: 465,
@@ -363,7 +268,6 @@ if(result != null){
             pass: '9669438120'
          }
      })
-
      let mailOptions = {
         from: 'himani.v@101bi.com',
         to: req.body.email, 
@@ -371,40 +275,20 @@ if(result != null){
         text: 'That was easy!', 
         html: '<b>Accept or reject</b>'
     }
-
     transporter.sendMail(mailOptions, function(error, info){
         if (error) {
           res.json(responseHelper.serveError(constant.error_msg,err))
         } else {
-          console.log('Email sent: ' + info.response);
           res.json( responseHelper.success(constant.success,result))
         }
       });
-    }
+    } 
   }) 
 }
 
 exports.getReferralDoctor =(req,res,next) =>{
-
     var start = (req.params.start-1)*req.params.end
-
-    sequelize.query('SELECT '+
-    ' map_referral_hospitals.hospital_id , map_referral_hospitals.hospital_branch_id,map_referral_hospitals.referral_id ,map_referral_hospitals.hospital_action_status AS hospital_action_status_id , map_referral_hospitals.referral_action_status AS referral_action_status_id,map_referral_hospitals.active_flag, '+
-    ' m_referral_doctors.user_id,m_referral_doctors.first_name,m_referral_doctors.last_name,m_referral_doctors.hospital_branch_speciality_id, '+
-    ' m_users.address,m_users.email_address,m_users.state,m_users.city,m_users.pincode,m_users.contact_number , '+
-    ' m_hospital_branch_specialities.speciality_id , '+
-    ' m_specialities.speciality, '+
-    ' m_status.status_name AS hospital_action_status, '+
-    ' ms.status_name AS referral_action_status '+
-    ' FROM map_referral_hospitals '+
-    ' JOIN m_referral_doctors ON m_referral_doctors.referral_id = map_referral_hospitals.referral_id '+
-    ' JOIN m_status ON m_status.status_id = map_referral_hospitals.hospital_action_status '+
-    ' JOIN m_status  ms ON ms.status_id = map_referral_hospitals.referral_action_status '+
-    ' JOIN m_users ON m_users.user_id = m_referral_doctors.user_id '+
-    ' JOIN  m_hospital_branch_specialities ON m_hospital_branch_specialities.speciality_id=m_referral_doctors.hospital_branch_speciality_id '+
-    ' JOIN  m_specialities ON m_specialities.speciality_id = m_hospital_branch_specialities.speciality_id '+
-    ' WHERE map_referral_hospitals.hospital_id=:hospital_id AND map_referral_hospitals.hospital_branch_id=:hospital_branch_id '+
-    ' LIMIT ' + req.params.end +' OFFSET ' +start, 
+    sequelize.query(queries.getReferralDoctor(req,start), 
     { replacements: { 
         hospital_id:req.params.hospitalId,
         hospital_branch_id:req.params.hospitalBranchId
@@ -418,7 +302,6 @@ exports.getReferralDoctor =(req,res,next) =>{
 }
 
 exports.getReferralDoctorCount = (req,res,next) =>{
-
     pReadingModels.referral_hospitals_model
     .findAndCountAll({
        where: {
@@ -430,7 +313,6 @@ exports.getReferralDoctorCount = (req,res,next) =>{
     .then(result => {
       res.json( responseHelper.success(constant.success,{referral_count:result.count}))
     });
-
 }
 
 
