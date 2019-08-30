@@ -48,7 +48,7 @@ exports.getHospitalBranches=(req,res,next)=>{
 exports.addRole= (req,res,next)=>{
     var roles ={}
     var hospitalBranchRole={}
-    roles= mapper.hospitalBranchRoleMapper(roles,req)
+    roles= mapper.hospitalBranchRolesMapper(roles,req)
     pReadingModels.role_model.create(roles).then(result=>{
         if(!result.isEmpty){
             hospitalBranchRole= mapper.hospitalBranchRoleMapper(hospitalBranchRole,result,req)

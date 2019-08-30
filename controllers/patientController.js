@@ -407,7 +407,6 @@ exports.updateBabyAppearsModel = (req, res, next) => {
     res.status(422).json({ errors: errors.array() });
     return;
   }
-
   pReadingModels.baby_appear_model.findAll(
     {
       where: {
