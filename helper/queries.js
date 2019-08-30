@@ -63,9 +63,29 @@ class queries{
         return sql;           
     } 
 
-    
+    static getHospitalProfile(){
+        let sql = 'SELECT m_hospitals.hospital_id,m_hospitals.user_id,m_hospitals.hospital_name, '+
+        ' m_users.address,m_users.city, m_users.contact_number,m_users.email_address, m_users.pincode, m_users.state, m_users.user_name, m_users.password '+
+        ' FROM m_hospitals '+
+        ' JOIN m_users ON m_hospitals.user_id = m_users.user_id '+
+        ' WHERE m_hospitals.hospital_id = :hospital_id ';
+        return sql;           
+    } 
 
+    static getHospitalBranches(){
+        let sql ='SELECT * FROM  m_hospitals_branches , m_users WHERE m_hospitals_branches.user_id=m_users.user_id AND m_hospitals_branches.hospital_id=:hospitalId';
+        return sql;           
+    } 
 
+    static getHopitalBranchRoles(){
+        let sql ='SELECT m_roles.role ,m_roles.role_id,m_hospital_branch_roles.id AS hospital_branch_role_id ,m_hospital_branch_roles.hospital_branch_id,m_hospital_branch_roles.hospital_id FROM  m_roles  JOIN  m_hospital_branch_roles ON m_roles.role_id = m_hospital_branch_roles.role_id WHERE   m_hospital_branch_roles.hospital_branch_id =:hospital_branch_id AND m_hospital_branch_roles.hospital_id=:hospital_id AND m_hospital_branch_roles.deleted_flag=0 ORDER BY m_hospital_branch_roles.createdAt DESC';
+        return sql;           
+    } 
+
+    static getHopitalBranchspecialities(){
+        let sql ='SELECT m_specialities.speciality, m_specialities.speciality_id ,m_hospital_branch_specialities.id AS hospital_branch_speciality_id ,m_hospital_branch_specialities.hospital_id , m_hospital_branch_specialities.hospital_branch_id FROM m_specialities JOIN m_hospital_branch_specialities ON m_specialities.speciality_id =m_hospital_branch_specialities.speciality_id WHERE m_hospital_branch_specialities.hospital_id=:hospital_id AND m_hospital_branch_specialities.hospital_branch_id=:hospital_branch_id AND m_hospital_branch_specialities.deleted_flag=0 ORDER BY m_hospital_branch_specialities.createdAt DESC';
+        return sql;           
+    } 
     
 }
 

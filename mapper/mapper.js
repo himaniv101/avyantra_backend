@@ -429,4 +429,63 @@ updateBabyInvestigationMapper:(result,req)=>{
      result.active_flag = req.body.status
      return result
  },
+ updateHospitalMapper:(result,req)=>{
+     result.address = req.body.address
+     result.city= req.body.city
+     result.contact_number=req.body.contact_number
+     result.email_address=req.body.email_address
+     result.pincode=req.body.pincode
+     result.state=req.body.state
+     result.user_name=req.body.user_name
+     result.password=req.body.password
+     return result
+ },
+ hospitalBranchRoleMapper:(hospitalBranchRole,result,req)=>{
+     hospitalBranchRole.role_id=result.role_id
+     hospitalBranchRole.hospital_id=req.params.hospitalId
+     hospitalBranchRole.hospital_branch_id=req.params.hospitalBranchId
+     hospitalBranchRole.deleted_flag=0
+     hospitalBranchRole.active_flag=1
+     return hospitalBranchRole
+ },
+ hospitalRoleMapper:(result,req)=>{
+     result.created_by=enumConst.userType.hospital_branch,
+     result.updated_by=enumConst.userType.hospital_branch,
+     result.deleted_flag= 0,
+     result.active_flag= 1,
+     result.role=req.body.role
+     return result
+ },
+ hospBranchRoleMapper:(hospitalBranchRole,result,req)=>{
+     hospitalBranchRole.role_id=result.role_id
+     hospitalBranchRole.hospital_id=req.params.hospitalId
+     hospitalBranchRole.hospital_branch_id=req.params.hospitalBranchId
+     hospitalBranchRole.deleted_flag=0
+     hospitalBranchRole.active_flag=1
+     return hospitalBranchRole
+ },
+ addSpecialityMapper:(hospitalBranchSpeciality,result,req)=>{
+     hospitalBranchSpeciality.speciality_id=result.speciality_id
+     hospitalBranchSpeciality.hospital_id=req.params.hospitalId
+     hospitalBranchSpeciality.hospital_branch_id=req.params.hospitalBranchId
+     hospitalBranchSpeciality.deleted_flag=0
+     hospitalBranchSpeciality.active_flag=1
+     return hospitalBranchSpeciality
+ },
+ specialityMapper:(speciality,req)=>{
+     speciality.created_by=enumConst.userType.hospital_branch,
+     speciality.updated_by=enumConst.userType.hospital_branch,
+     speciality.deleted_flag= 0,
+     speciality.active_flag= 1,
+     speciality.speciality=req.body.speciality
+     return speciality
+ },
+ hospitalBrancheSpecialitiesMapper:(hospitalBranchSpeciality,result,req)=>{
+     hospitalBranchSpeciality.speciality_id=result.speciality_id
+     hospitalBranchSpeciality.hospital_id=req.params.hospitalId
+     hospitalBranchSpeciality.hospital_branch_id=req.params.hospitalBranchId
+     hospitalBranchSpeciality.deleted_flag=0
+     hospitalBranchSpeciality.active_flag=1
+     return hospitalBranchSpeciality
+ }
 }
