@@ -2,12 +2,9 @@ language: node_js
 
 node_js:
   - "12"
-  - "node"
 
 os:
   - linux
-  - osx
-  - windows
 
 sudo: false
 
