@@ -19,8 +19,6 @@ cache:
 env:
   global:
     - CC_TEST_REPORTER_ID=0a4da081e3fad94ed05f9d6cb75ec4e5bad81340097e0bc6a6f159b0a64f68bc
-script:
-  - bundle exec rspec
 
 before_script:
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
