@@ -8,6 +8,9 @@ os:
 
 sudo: false
 
+rvm:
+  - 2.2.0
+
 cache:
     npm: false
     directories:
@@ -16,15 +19,17 @@ cache:
 env:
   global:
     - CC_TEST_REPORTER_ID=0a4da081e3fad94ed05f9d6cb75ec4e5bad81340097e0bc6a6f159b0a64f68bc
-#### Rest of code omitted for clarity ####
+script:
+  - bundle exec rspec
+
 before_script:
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
   - ./cc-test-reporter before-build
-#### Rest of code omitted for clarity ####
+
 after_script:
-#### - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
- ## - ./cc-test-reporter after-build -t /home/travis/build/himaniv101/avyantra_backend/coverage/lcov --exit-code $TRAVIS_TEST_RESULT
-  ##- ./cc-test-reporter after-build -t coverage/codeclimate.json -p 2         
-  - ./cc-test-reporter upload-coverage --input /home/travis/build/himaniv101/avyantra_backend/coverage/codeclimate.json
+  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
+
+
+
         
