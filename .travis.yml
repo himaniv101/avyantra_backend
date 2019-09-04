@@ -25,4 +25,6 @@ before_script:
 after_script:
 #### - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
  ## - ./cc-test-reporter after-build -t /home/travis/build/himaniv101/avyantra_backend/coverage/lcov --exit-code $TRAVIS_TEST_RESULT
-  - ./cc-test-reporter after-build -t coverage/codeclimate.json -p 2                 
+  ##- ./cc-test-reporter after-build -t coverage/codeclimate.json -p 2         
+  - ./cc-test-reporter upload-coverage --input /home/travis/build/himaniv101/avyantra_backend/coverage/codeclimate.json
+        
